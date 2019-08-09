@@ -11,7 +11,7 @@ const html = ctx => {
 };
 
 const main = async function(ctx) {
-	const body = ctx.request.body;
+    const body = ctx.request.body;
 	if(!body.name) ctx.throw(400, '.name required');
 	ctx.body = {
 		name: body.name,

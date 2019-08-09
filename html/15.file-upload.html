@@ -14,12 +14,14 @@
 			let files = e.target.files || e.dataTransfer.files;
 			console.log("file:-->", files)
 			let formData = new FormData();
-			formData.append('files', files[0]);
-			
+            formData.append('files', files[0]);
+            
 			$.ajax({
 				url: '/file',
 				type: 'POST',
-				data: formData,
+                data: formData,
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,   // jQuery不要去设置Content-Type请求头
 				success: function(res){
 					console.log(res)
 				}

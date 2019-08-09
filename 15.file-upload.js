@@ -15,7 +15,8 @@ const html = ctx => {
 const main = async function(ctx) {
 	const tmpdir = os.tmpdir();
 	const filePaths = [];
-	const files = ctx.request.body.files || {};
+    const files = ctx.request.body.files || {};
+    console.log(ctx.request.body)
 
 	for(let key in files) {
 		const file = files[key];
