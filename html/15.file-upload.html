@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<p>点击按钮，上传文件</p>
+		<input type="file" name="" id="file" value="上传" />
+	</body>
+	<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$("#file").change(function(e){
+			let files = e.target.files || e.dataTransfer.files;
+			console.log("file:-->", files)
+			let formData = new FormData();
+			formData.append('files', files[0]);
+			
+			$.ajax({
+				url: '/file',
+				type: 'POST',
+				data: formData,
+				success: function(res){
+					console.log(res)
+				}
+			})
+		})
+		
+	</script>
+</html>

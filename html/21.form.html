@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			td a:hover{cursor: pointer; color: dodgerblue;}
+		</style>
+	</head>
+
+	<body>
+		<p>点击按钮，post请求数据</p>
+		姓名： <input type="text" name="name" id="name" value="" />
+		年龄： <input type="number" name="age" id="age" value="" />
+		<button onclick="submit()">发送</button>
+		<button onclick="search()">查询</button>
+		
+		<br />
+		<br />
+		<br />
+		<table class="dataShow" border="1" cellspacing="0" cellpadding="5">
+			<thead>
+				<th>id</th>
+				<th>姓名</th>
+				<th>年龄</th>
+				<th>添加时间</th>
+				<th>查询时间</th>
+				<th>操作</th>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<p class="totalPage"></p>
+		页码：<input type="number" name="pageNo" id="pageNo" value="1" /><button onclick="search()">GO</button>
+	</body>
+	<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$("#age").keydown(function(event){
+			if(event.keyCode == 13){
+				submit() 
+				$("#name").val("").focus()
+			}
+	　　	});
+		//增
+		function submit() {
+			let name = $("#name").val()
+			let age = $("#age").val()
+			$.post('/add', { name: name, age: age }).then(res=>{
+				console.log(res)
+				if(res.code==0){search()}
+			})
+		}
+		//查
+		function search(){
+			$.post('/search', {
+				pageSize: 10,
+				pageNo	: $("#pageNo").val() ? $("#pageNo").val() : 1
+			}).then(res=>{
+				console.log(res)
+				$("tbody").html("");
+				if(res.code==0){
+					for(let item of res.data.data){
+						let trItem = `<tr class='dataItem'>
+										<td>${item.id}</td>
+										<td>${item.name}</td>
+										<td>${item.age}</td>
+										<td>${new Date(item.date).Format("yyyy-MM-dd hh:mm:ss")}</td>
+										<td>${new Date().Format("yyyy-MM-dd hh:mm:ss")}</td>
+										<td>
+											<a onclick="del(${item.id})">删除</a>
+											<a onclick="updata(${item.id})">修改</a>
+										</td>
+									</tr>`;
+						$(".dataShow tbody").append(trItem)
+					}
+					$(".totalPage").text(`共 ${res.count} 条数据`)
+				}
+			})
+		}
+		//删
+		function del(id){
+			$.get('/del', {id: id}).then(res=>{
+				res = JSON.parse(res)
+				if(res.code==0){search()}
+			})
+		}
+		//改
+		function updata(id){
+			$.get('/updata', {
+				id  : id,
+				name: '国安局',
+				age : '9局'
+			}).then(res=>{
+				res = JSON.parse(res)
+				if(res.code==0){search()}
+			})
+		}
+		
+		
+		Date.prototype.Format = function (fmt) {
+		    var o = {
+		        "M+": this.getMonth() + 1, 						//月份 
+		        "d+": this.getDate(), 							//日 
+		        "h+": this.getHours(), 							//小时 
+		        "m+": this.getMinutes(), 						//分 
+		        "s+": this.getSeconds(), 						//秒 
+		        "q+": Math.floor((this.getMonth() + 3) / 3), 	//季度 
+		        "S": this.getMilliseconds() 					//毫秒 
+		    };
+		    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		    for (var k in o)
+		    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		    return fmt;
+		}
+	</script>
+
+</html>

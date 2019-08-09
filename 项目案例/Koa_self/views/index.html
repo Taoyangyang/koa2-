@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/css/index.css"/>
+		<style type="text/css">
+			#form span{display: inline-block; width: 80px; text-align: right;}
+		</style>
+	</head>
+	<body>
+		<h1>添加-修改数据页面</h1>
+		<form id="form">
+			<span>姓名： </span>
+			<input type="text" name="" id="name" value="" /><br /><br />
+			<span>密码：  </span>
+			<input type="password" name="" id="pwd" value="" /><br /><br />
+			<span>重复密码： </span> 
+			<input type="password" name="" id="repwd" value="" /><br /><br />
+			<span>头像： </span>
+			<input type="file" id='file' />
+			<input type="hidden" id="avatorVal"><br /><br />
+			<span>头像显示： </span>
+			<img class="preview" alt="预览头像" width="200"><br /><br />
+			<br />
+			<span></span>
+			<input id="submit" type="button" onclick="sub()" value="提交"/>
+			<input id="update" type="button" onclick="update()" value="修改"/>
+			<a href="/about">列表数据查看</a>
+		</form>
+		<!------------------------------------>
+	</body>
+	<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/index.js" type="text/javascript" charset="utf-8"></script>
+</html>

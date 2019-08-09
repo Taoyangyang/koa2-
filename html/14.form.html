@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<p>点击按钮，post请求数据</p>
+		<button onclick="submit()">发送</button>
+	</body>
+	<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function submit() {
+			$.ajax({
+				url: '/name',
+				type: 'POST',
+				data: {
+					name: 'tony',
+					age: '24'
+				},
+				success: function(res) {
+					console.log(res)
+				}
+			})
+		}
+	</script>
+
+</html>

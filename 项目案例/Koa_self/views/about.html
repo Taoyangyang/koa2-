@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>about</title>
+		<style type="text/css">
+			table a:hover{cursor: pointer; color: #1E90FF;}
+		</style>
+	</head>
+	<body>
+		<h1>这是个about页面</h1>
+		用户名：<input type="text" name="" id="name" value="" />
+		<button onclick="search()">查询</button>
+		<br />
+		<br />
+		<table border="1" cellspacing="0" cellpadding="10">
+			<tr>
+				<th>用户名</th>
+				<th>密码</th>
+				<th>头像</th>
+				<th>时间</th>
+				<th>操作</th>
+			</tr>
+		</table>
+		<br />
+		<br />
+		<select id="p" name="p"></select>
+		<select id="c" name="c"></select>
+		<select id="a" name="a"></select>
+	</body>
+	<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function search(){
+			$.get("/searchData", {
+				name    : $("#name").val(),
+				pageSize: 10,
+				pageNo  : 1
+			}).then(res=>{
+				console.log(res)
+				$("table").html('');
+				for(let item of res.data){
+					let html = `<tr>
+						<td>${item.name}</td>
+						<td>${item.pass}</td>
+						<td><img src='/tmp/${item.avator}' width='50' height='50'/></td>
+						<td>${item.moment}</td>
+						<td>
+							<a onclick='del(${item.id})'>删除</a>
+							<a href='/index?id=${item.id}'>修改</a>
+						</td>
+					</tr>`;
+					$("table").append(html)
+				}
+			})
+		}
+		function del(id){
+			let delSure = confirm("确定删除？")
+			if(delSure){
+				$.get('/deletData', { id: id }).then(res=>{
+					console.log(res)
+					if(res.code==200){
+						search()
+					}
+				})
+			}
+		}
+		
+		
+		//获取地址信息
+		getArea(null, 1)
+		function getArea(pid, level){
+			$.get('/getArea', {
+				pid: pid,
+				level : level==1 ? 1 : ''
+			}).then(res=>{
+				console.log(res)
+				let phtml = "<option value=''>请选择省份</option>";
+				let chtml = "<option value=''>请选择城市</option>";
+				let ahtml = "<option value=''>请选择地区</option>";
+				
+				if(level ==1 ){
+					$("#c").html('')
+					$("#a").html('')
+					for(let item of res.data){
+						phtml += `<option value="${item.id}">${item.name}</option>`
+					}
+				}
+				if(level ==2 ){
+					$("#a").html('')
+					for(let item of res.data){
+						chtml += `<option value="${item.id}">${item.name}</option>`
+					}
+				}
+				if(level ==3 ){
+					for(let item of res.data){
+						ahtml += `<option value="${item.id}">${item.name}</option>`
+					}
+				}
+				if(level == 1) $("#p").append(phtml);
+				if(level == 2) $("#c").append(chtml);
+				if(level == 3) $("#a").append(ahtml);
+			})
+		}
+		
+		$('#p').change(function (e){
+			let pid = $(this).children('option:selected').val();
+			getArea(pid, 2)
+		})
+		$('#c').change(function (e){
+			let pid = $(this).children('option:selected').val();
+			getArea(pid, 3)
+		})
+	</script>
+</html>
